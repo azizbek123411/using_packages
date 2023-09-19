@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:using_packages/servers/flutter_toast.dart';
 import 'package:using_packages/servers/platform_id.dart';
-
+import 'package:url_launcher/url_launcher_string.dart';
 import '../servers/log_servises.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,6 +15,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future<void> _launchURL(String url)async{
+    final Uri uri=Uri(scheme: "https",host: url);
+    if(!await launchUrl(
+        uri,
+    mode: LaunchMode.externalApplication
+    )){
+      throw "Don't launch";
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,6 +104,62 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(fontSize: 20, color: Colors.black),
                   ),
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.white.withOpacity(0.6),
+                    ),
+                    child: IconButton(
+                      onPressed: ()async{
+                        String callURl="tel:";
+                        if(await canLaunchUrlString(callURl)){
+                          launchUrlString(callURl);
+                        }print("Can't url");
+                      },
+                      icon: const Icon(Icons.call,size: 30,),
+                    ),
+                  ),
+                  Container(
+                    height: 80,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white.withOpacity(0.6),
+                    ),
+                    child: TextButton(
+                    onPressed: (){
+                      _launchURL("www.youtube.com");
+                    },
+                      child: const Text(
+                        "URl launcher",
+                        style: TextStyle(fontSize: 20, color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.white.withOpacity(0.6),
+                    ),
+                    child: IconButton(
+                      onPressed: ()async{
+                        String smsURL="sms:";
+                        if(await canLaunchUrlString(smsURL)){
+                          launchUrlString(smsURL);
+                        }print("Can't launch");
+                      },
+                      icon: const Icon(Icons.sms,size: 30,),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
